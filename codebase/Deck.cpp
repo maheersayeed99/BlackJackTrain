@@ -15,6 +15,7 @@ card::card(int v, int s, bool h) {
 Deck::Deck(int n) {
 	// load sounds and start player
 	
+	/*
 
 	if (YSOK != Shuffle.LoadWav("../BlackJackTrain/sounds/shuffle.wav"))
 		cout << "   ERROR: Unable to load shuffle.wav " << endl;
@@ -26,7 +27,7 @@ Deck::Deck(int n) {
 		cout << "   ERROR: Unable to load chips.wav " << endl;
 
 	theSoundPlayer.Start();
-
+	*/
 	
 
 	int count = 0;
@@ -55,14 +56,14 @@ void Deck::shuffle() {
 	
 	random_shuffle(cardOrder.begin(), cardOrder.end());					// random library used
 	nextCard = 0;														// shuffles cardOrder which is a list of indexes the size of the deck
-	theSoundPlayer.PlayOneShot(Shuffle);
+	//theSoundPlayer.PlayOneShot(Shuffle);
 }
 
 card* Deck::draw(bool hide) {
 	card* next = deckStatic.at(cardOrder.at(nextCard));				// pick next card
 	nextCard++;
 
-	theSoundPlayer.PlayOneShot(Deal);
+	//theSoundPlayer.PlayOneShot(Deal);
 
 	next->hidden = hide;
 
@@ -151,7 +152,7 @@ void card::printCard() {									// Prints card to command console
 
 
 void Deck::playChips() {
-	theSoundPlayer.PlayOneShot(Chips);
+	//theSoundPlayer.PlayOneShot(Chips);
 }
 
 

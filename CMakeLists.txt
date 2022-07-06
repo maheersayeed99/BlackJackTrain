@@ -12,8 +12,11 @@ add_subdirectory(./public/src ${CMAKE_BINARY_DIR}/public)
 target_include_directories(fssimplewindow PUBLIC ${HEADER_PATH})
 target_include_directories(ysclass PUBLIC ${HEADER_PATH})
 target_include_directories(ysbitmapfont PUBLIC ${HEADER_PATH})
-target_include_directories(yssimplesound PUBLIC ${HEADER_PATH})
 target_include_directories(ysbitmap PUBLIC ${HEADER_PATH})
+#target_include_directories(yssimplesound PUBLIC ${HEADER_PATH})
 
 
 add_subdirectory(codebase)
+
+file(COPY ./images/cards DESTINATION .)
+file(COPY ./images/backgrounds DESTINATION .)

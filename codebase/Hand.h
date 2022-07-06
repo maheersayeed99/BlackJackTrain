@@ -8,7 +8,7 @@ class Hand {
 public:
 	const double PI = 3.1415927;
 
-	int cardScale = 10;
+	int cardScale = 5;
 	vector<card*> playerHand;				// player hand
 	int points;								// hand score
 	int altPoints;							// alternate score if there is an ace
@@ -47,7 +47,6 @@ public:
 	// OPENGL DRAW HAND FUNCTIONS //
 
 	void drawHandOnScreen(int playerN, GLuint textures[13][4], GLuint shadeTexture, YsRawPngDecoder png[13][4], bool dealer = false, bool split = false);
-
 
 	void changeTurn(int playerNumber, bool immediate = false);
 

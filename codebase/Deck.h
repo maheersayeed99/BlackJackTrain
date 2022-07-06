@@ -6,7 +6,7 @@
 #include <math.h>
 #include <ctype.h>
 #include "fssimplewindow.h"
-#include "yssimplesound.h"
+//#include "yssimplesound.h"
 
 using namespace std;
 
@@ -59,10 +59,13 @@ private:
 	
 
 public:
+
+/*
 	YsSoundPlayer theSoundPlayer;
 	YsSoundPlayer::SoundData Shuffle;
 	YsSoundPlayer::SoundData Deal;
 	YsSoundPlayer::SoundData Chips;
+*/
 
 	// counting cards
 	int count;

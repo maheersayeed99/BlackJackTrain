@@ -1,13 +1,13 @@
 #include "Game.h"
 #include "DrawingUtilNG.h"
-#include "yssimplesound.h"
+//#include "yssimplesound.h"
 using namespace std;
 
 
 Game::Game(int n, int p) {
 
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-	loadHelper("../BlackJackTrain/images/backgrounds/loading.png", miscPng[3], miscTexture[3]);
+	loadHelper("./backgrounds/loading.png", miscPng[3], miscTexture[3]);
 	drawBackground(3);
 	Fonts.init();
 	Fonts.setColorRGB(250, 0, 0);
@@ -322,14 +322,14 @@ void Game::loadHelper(string fileName, YsRawPngDecoder& decodeFile, GLuint& text
 
 void Game::loadTextures() {
 	// Read Table PNG
-	loadHelper("../BlackJackTrain/images/backgrounds/table.png", miscPng[1], miscTexture[1]);
-	loadHelper("../BlackJackTrain/images/cards/shade.png", miscPng[4], miscTexture[4]);
-	loadHelper("../BlackJackTrain/images/backgrounds/menu.png", miscPng[0], miscTexture[0]);
-	loadHelper("../BlackJackTrain/images/backgrounds/blueTable.png", miscPng[2], miscTexture[2]);
+	loadHelper("./backgrounds/table.png", miscPng[1], miscTexture[1]);
+	loadHelper("./cards/shade.png", miscPng[4], miscTexture[4]);
+	loadHelper("./backgrounds/menu.png", miscPng[0], miscTexture[0]);
+	loadHelper("./backgrounds/blueTable.png", miscPng[2], miscTexture[2]);
 	// Read Card pngs
 	for (int i = 0; i <= 12; i++) {
 		for (int j = 0; j <= 3; j++) {
-			string str = "../BlackJackTrain/images/cards/" + to_string(i) + to_string(j) + ".png";
+			string str = "./cards/" + to_string(i) + to_string(j) + ".png";
 			loadHelper(str, png[i][j], textures[i][j]);
 		}
 	}
