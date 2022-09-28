@@ -23,12 +23,15 @@ private:
 
 	Deck* deck;
 	int numPlayers;
-	int gameSpeed = 750;						// This sets how fast the cards are drawn
+	int gameSpeed;						// This sets how fast the cards are drawn
 
 	vector<Player*> players;
 	Player* dealer;
 	double timeElapsed;
 	int gameMode;
+	enum GAMEMODE {
+		MENU, BLACKJACK, COUNTCARDS, STRATEGY
+	};
 	int playerIndex;
 
 	bool insurance;
@@ -44,16 +47,17 @@ public:
 
 	GLuint textures[13][4], miscTexture[10]; // misc1 is background, misc2 is shade
 	YsRawPngDecoder png[13][4], miscPng[10];
-
+	enum IMAGES{
+		MAINMENU,GREENTABLE,BLUETABLE,LOADMENU,SHADE
+	};
 	
 	// User Input Logic
 	int key;
 	bool gameRunning;
 	
 
-	Game(int n, int p);
-
-	// Console Functions
+	Game(int n, int p, int speed);
+	bool terminate();
 	
 	void printMenu();
 

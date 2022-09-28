@@ -4,37 +4,35 @@
 using namespace std;
 
 
-Game::Game(int n, int p) {
+Game::Game(int n, int p, int speed) {
 
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-	loadHelper("./backgrounds/loading.png", miscPng[3], miscTexture[3]);
-	drawBackground(3);
+	loadHelper("./backgrounds/loading.png", miscPng[LOADMENU], miscTexture[LOADMENU]);
+	drawBackground(LOADMENU);
 	Fonts.init();
 	Fonts.setColorRGB(250, 0, 0);
+
+	gameSpeed = speed;
 	
 	deck = new Deck(n);							// make new deck
-	
 	numPlayers = p;								// specify how many players in game
-
+	dealer = new Player(0);						// make dealer
 	for (int i = 0; i < numPlayers; i++) {	
 		Player* newPlayer = new Player(i+1);		// make new players
 		players.push_back(newPlayer);			
 	}
 
-	dealer = new Player(0);						// make dealer
 	insurance = false;
-
 	gameRunning = true;							// Start game loop
-	gameMode = 0;								// Set game mode to menu
+	gameMode = MENU;								// Set game mode to menu
 
-	/////// SOUND ////////
-	
-	
 	FsSwapBuffers();
 	loadTextures();								// Load Textures
 	printMenu();
 }
-
+bool Game::terminate(){
+	return gameRunning;
+}
 void Game::dealRound(int mode) {
 	// make sure all hands cleared 
 	clearHand();
@@ -58,7 +56,7 @@ void Game::dealRound(int mode) {
 				key = FsInkey();
 
 				if (key == FSKEY_M) {
-					gameMode = 0;
+					gameMode = MENU;
 					goto endFunc;
 				}
 				printPlayer->hand->changeTurn((players.size()) / 2, true);
@@ -306,10 +304,8 @@ void Game::clearHand() {
 
 void Game::loadHelper(string fileName, YsRawPngDecoder& decodeFile, GLuint& textureFile) {
 	const char* c = fileName.c_str();
-	if(decodeFile.Decode(c))
-		std::cout<<"found"<<std::endl;
-	else
-		std::cout<<"not found"<<std::endl;
+	if(!decodeFile.Decode(c))
+		std::cout<<"file not found"<<std::endl;
 	glGenTextures(1, &textureFile);
 	glBindTexture(GL_TEXTURE_2D, textureFile);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
@@ -322,10 +318,10 @@ void Game::loadHelper(string fileName, YsRawPngDecoder& decodeFile, GLuint& text
 
 void Game::loadTextures() {
 	// Read Table PNG
-	loadHelper("./backgrounds/table.png", miscPng[1], miscTexture[1]);
-	loadHelper("./cards/shade.png", miscPng[4], miscTexture[4]);
-	loadHelper("./backgrounds/menu.png", miscPng[0], miscTexture[0]);
-	loadHelper("./backgrounds/blueTable.png", miscPng[2], miscTexture[2]);
+	loadHelper("./backgrounds/table.png", miscPng[GREENTABLE], miscTexture[GREENTABLE]);
+	loadHelper("./cards/shade.png", miscPng[SHADE], miscTexture[SHADE]);
+	loadHelper("./backgrounds/menu.png", miscPng[MAINMENU], miscTexture[MAINMENU]);
+	loadHelper("./backgrounds/blueTable.png", miscPng[BLUETABLE], miscTexture[BLUETABLE]);
 	// Read Card pngs
 	for (int i = 0; i <= 12; i++) {
 		for (int j = 0; j <= 3; j++) {
@@ -498,24 +494,24 @@ void Game::manage() {
 
 	/////////////////////////////////////	MAIN MENU	/////////////////////////////////////////////////////
 	
-	if (gameMode == 0) {			// If the screen is on menu
+	if (gameMode == MENU) {			// If the screen is on menu
 
 		drawBackground(gameMode);
 
 		switch (key) {
 		case FSKEY_M:				// Pressing M opens the menu
-			gameMode = 0;
+			gameMode = MENU;
 			break;
 		case FSKEY_B:				// Pressing B starts Blackjack Game
-			gameMode = 1;
+			gameMode = BLACKJACK;
 			break;
 		case FSKEY_C:				// Pressing C starts Counting Cards Game
-			gameMode = 2;
+			gameMode = COUNTCARDS;
 			break;
 		case FSKEY_S:				// Pressing S starts Simulation Mode
-			gameMode = 3;
+			gameMode = STRATEGY;
 			break;
-		case FSKEY_X:				// Pressing X closes the Menu
+		case FSKEY_ESC:				// Pressing X closes the Menu
 			gameRunning = false;
 			break;
 		}
@@ -523,12 +519,12 @@ void Game::manage() {
 
 	////////////////////////////////////////////// BLACKJACK REGULAR ///////////////////////////////////////////////
 
-	else if (gameMode == 1) {			// If BlackJack Mode							
+	else if (gameMode == BLACKJACK) {			// If BlackJack Mode							
 		
 		cout << "NOW PLAYING BLACKJACK" << endl << endl;
 		
 		dealRound(gameMode);					// Deal Cards Initially
-		if (gameMode == 0) { goto backMenu; }
+		if (gameMode == MENU) { goto backMenu; }
 		
 		printGameState();				// Print the dealt cards
 
@@ -595,7 +591,7 @@ void Game::manage() {
 
 									case FSKEY_M:							// Pressing M opens the menu
 										printMenu();
-										gameMode = 0;
+										gameMode = MENU;
 										goto backMenu;						// Break out of loop
 									}
 								}
@@ -621,7 +617,7 @@ void Game::manage() {
 
 				case FSKEY_M:							// Pressing M opens the menu
 					printMenu();
-					gameMode = 0;
+					gameMode = MENU;
 					goto backMenu;						// Break out of loop
 
 				
@@ -687,7 +683,7 @@ void Game::manage() {
 			switch (key) {
 			case FSKEY_M:							// Pressing M opens the menu
 				printMenu();
-				gameMode = 0;
+				gameMode = MENU;
 				goto backMenu;
 			}
 
@@ -705,7 +701,7 @@ void Game::manage() {
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-	else if (gameMode == 2) {												// If Counting Mode							
+	else if (gameMode == COUNTCARDS) {												// If Counting Mode							
 	cout << "NOW PLAYING COUNTING GAME" << endl << endl;
 	int correct = 0;
 	int outOf = 0;
@@ -714,7 +710,7 @@ void Game::manage() {
 		// begin clock
 
 	dealRound(gameMode);															// Deal Cards Initially
-	if (gameMode == 0) { goto backMenu; }
+	if (gameMode == MENU) { goto backMenu; }
 
 	playerTurn = 1;																// Player number
 	for (Player* currPlayer : players) {
@@ -777,7 +773,7 @@ void Game::manage() {
 		switch (key) {
 		case FSKEY_M:							// Pressing M opens the menu
 			printMenu();
-			gameMode = 0;
+			gameMode = MENU;
 			goto backMenu2;
 		}
 		 
